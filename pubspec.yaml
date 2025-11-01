@@ -1,0 +1,31 @@
+name: quiz_app_front
+description: "A new Flutter project."
+publish_to: 'none'
+
+version: 1.0.0+1
+
+environment:
+  # 🚀 Mise à jour du SDK : Utiliser une version récente, compatible avec Flutter 3.x
+  sdk: '>=3.0.0 <4.0.0' # Plus sûr pour les projets modernes
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  
+  # 🚀 Mise à jour de Google Sign In vers une version plus récente et stable
+  google_sign_in: ^6.2.1 
+  
+  http: ^1.2.2
+  shared_preferences: ^2.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  # 🚀 Mise à jour des Lints
+  flutter_lints: ^3.0.0 # Passage à une version majeure récente pour les lints
+  
+flutter:
+  uses-material-design: true
