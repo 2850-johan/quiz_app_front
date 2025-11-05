@@ -21,7 +21,7 @@ class _AuthPageState extends State<AuthPage> {
 
   final _gsi = GoogleSignIn(
     scopes: ['email', 'profile'],
-    serverClientId: '42999153219-hf44a5a23qssek59vd2qp227g6he9862.apps.googleusercontent.com',
+    serverClientId: '42999153219-hf44a5a23qssek59vd2qp227g6he9862.apps.googleusercontent.com',//id de client OAuth 2.0 pour les applications Web
   );
 
   @override
@@ -56,7 +56,7 @@ class _AuthPageState extends State<AuthPage> {
       setState(() => _status = 'Veuillez saisir nom et email.');
       return;
     }
-    final emailOk = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(email);
+    final emailOk = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$').hasMatch(email);//hachage simple de validation d'email
     if (!emailOk) {
       setState(() => _status = 'Email invalide.');
       return;
@@ -110,7 +110,7 @@ class _AuthPageState extends State<AuthPage> {
         headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
         body: jsonEncode({'idToken': idToken}),
       );
-
+// 
       if (res.statusCode == 200) {
         final data = jsonDecode(res.body);
         final token = data['accessToken'];
@@ -138,7 +138,7 @@ class _AuthPageState extends State<AuthPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Test Auth')),
+      appBar: AppBar(title: const Text('Quiz App ')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
