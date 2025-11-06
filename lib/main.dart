@@ -6,7 +6,7 @@ void main() => runApp(const MyApp());
 
 // ⚠️ IMPORTANT : L'IP de votre machine (PC) sur le réseau partagé par votre téléphone
 // Dans main.dart
-const String BACKEND_BASE_URL = 'http://172.16.82.254:3000'; //   10.26.114.26
+const String BACKEND_BASE_URL = 'http://172.16.81.203:3000'; //   10.26.114.26
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
