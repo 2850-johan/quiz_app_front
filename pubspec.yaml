@@ -5,30 +5,34 @@ publish_to: 'none'
 version: 1.0.0+1
 
 environment:
-  # 🚀 Mise à jour du SDK : Utiliser une version récente, compatible avec Flutter 3.x
-  sdk: '>=3.0.0 <4.0.0' # Plus sûr pour les projets modernes
+  sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-   # connectivity_plus: ^5.0.3
-
+  
   cupertino_icons: ^1.0.8
   
-  # 🚀 Mise à jour de Google Sign In vers une version plus récente et stable
   google_sign_in: ^6.2.1 
-  
   http: ^1.2.2
   shared_preferences: ^2.3.2
   connectivity_plus: ^7.0.0
-
+  font_awesome_flutter: ^10.7.0 # ⬅️ AJOUTÉ pour les icônes Google/Mail
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
-  # 🚀 Mise à jour des Lints
-  flutter_lints: ^3.0.0 # Passage à une version majeure récente pour les lints
   
+  flutter_lints: ^3.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/images/quiz-logo.png"
+
 flutter:
   uses-material-design: true
 
+  assets:
+    - assets/images/

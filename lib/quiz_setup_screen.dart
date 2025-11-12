@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart'; // Ajouté pour la déconnexion si besoin
+import 'package:shared_preferences/shared_preferences.dart';
 
-// Importe la constante d'URL et la page de destination
+// Importe la constante d'URL et les pages de destination
 import 'main.dart'; 
-import 'auth_page.dart'; // Ajouté pour la déconnexion
+import 'auth_page.dart'; 
 import 'quiz_page.dart'; 
 
 class QuizSetupScreen extends StatefulWidget {
@@ -30,10 +30,10 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
   }
 
   // ==========================================================
-  //  LOGIQUE DE PROGRESSION DES QUESTIONS
+  // 🎯 LOGIQUE DE PROGRESSION DES QUESTIONS
   // ==========================================================
-  int _getQuestionCount() {// fonction qui permet de déterminer le nombre de questions par niveau choisis par l'utilisateur
-  
+  // Détermine le nombre de questions par niveau choisi (5, 10, 15, ou 20)
+  int _getQuestionCount() { 
     int levelIndex; 
     
     switch (_level) {
@@ -48,7 +48,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
   }
   
   // ==========================================================
-  // FONCTION DE DÉCONNEXION (Ajoutée pour l'UX)
+  // 🔑 FONCTION DE DÉCONNEXION
   // ==========================================================
   Future<void> _logout() async {
     final prefs = await SharedPreferences.getInstance();
@@ -62,11 +62,13 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (_) => const AuthPage()), 
-      (Route<dynamic> route) => false,
+      (Route<dynamic> route) => false, // Supprime toutes les pages précédentes
     );
   }
 
-
+  // ==========================================================
+  // 🚀 FONCTION DE DÉMARRAGE DU QUIZ (Appel API Mistral)
+  // ==========================================================
   Future<void> _startQuiz() async {
     setState(() { _loading = true; _error = null; });
     
@@ -109,12 +111,15 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
     }
   }
 
+  // ==========================================================
+  // 🎨 CONSTRUCTION DE L'INTERFACE UTILISATEUR
+  // ==========================================================
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Quiz App'),
-        // Ajout du bouton de déconnexion
+        // Bouton de déconnexion
         actions: [
           TextButton.icon(
             label: const Text('Déconnexion', style: TextStyle(color: Colors.white)),
@@ -123,43 +128,46 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Bienvenue ${widget.userName} 👋', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 12),
-            const Text('Choisis ton niveau :'),
-            const SizedBox(height: 8),
-            // Sélecteur de niveau
-            DropdownButton<String>(
-              value: _level,
-              items: _levels.map((l) => DropdownMenuItem(value: l, child: Text(l))).toList(),
-              onChanged: (v) => setState(() => _level = v!),
-            ),
-            const SizedBox(height: 16),
-            const Text('Thème du quiz :'),
-            const SizedBox(height: 8),
-            // Champ pour le thème
-            TextField(
-              controller: _themeCtrl,
-              decoration: const InputDecoration(
-                hintText: 'ex: géographie, maths, histoire…',
-                border: OutlineInputBorder(),
+      // 🎯 CORRECTION: Ajout du SingleChildScrollView pour éviter le débordement (overflow)
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Bienvenue ${widget.userName} 👋', style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 12),
+              const Text('Choisis ton niveau :'),
+              const SizedBox(height: 8),
+              // Sélecteur de niveau
+              DropdownButton<String>(
+                value: _level,
+                items: _levels.map((l) => DropdownMenuItem(value: l, child: Text(l))).toList(),
+                onChanged: (v) => setState(() => _level = v!),
               ),
-            ),
-            const SizedBox(height: 24),
-            if (_error != null) Text(_error!, style: const TextStyle(color: Colors.red)),
-            // Bouton de lancement
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: _loading ? null : _startQuiz,
-                child: Text(_loading ? 'Génération du quiz…' : 'Commencer le quiz'),
+              const SizedBox(height: 16),
+              const Text('Thème du quiz :'),
+              const SizedBox(height: 8),
+              // Champ pour le thème
+              TextField(
+                controller: _themeCtrl,
+                decoration: const InputDecoration(
+                  hintText: 'ex: géographie, maths, histoire…',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-          ],
+              const SizedBox(height: 24),
+              if (_error != null) Text(_error!, style: const TextStyle(color: Colors.red)),
+              // Bouton de lancement
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _loading ? null : _startQuiz,
+                  child: Text(_loading ? 'Génération du quiz…' : 'Commencer le quiz'),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

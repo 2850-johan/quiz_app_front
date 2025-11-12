@@ -1,12 +1,14 @@
+// lib/main.dart (MODIFIÉ)
 import 'package:flutter/material.dart';
-// Importe la page où commence l'authentification
-import 'auth_page.dart'; 
+
+// Importe le nouveau Splash Screen
+import 'splash_screen.dart'; 
 
 void main() => runApp(const MyApp());
 
-// ⚠️ IMPORTANT : L'IP de votre machine (PC) sur le réseau partagé par votre téléphone
-// Dans main.dart
-const String BACKEND_BASE_URL = 'http://172.16.81.203:3000'; //   10.26.114.26
+// ⚠️ Votre constante d'URL de backend doit rester ici
+// Si vous utilisez localtunnel (https://...), elle doit être mise à jour avant chaque session !
+const String BACKEND_BASE_URL = 'http://10.73.186.26:3000'; 
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -14,7 +16,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: AuthPage(),
+      // 🎯 L'application commence ici
+      home: SplashScreen(), 
     );
   }
 }
+// Le reste des classes (AuthPage, QuizSetupScreen, QuizPage) doit être dans leurs propres fichiers !0*
