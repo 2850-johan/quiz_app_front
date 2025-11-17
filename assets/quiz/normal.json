@@ -1,0 +1,64 @@
+{
+  "questions": [
+    {
+      "question": "Quelle est la monnaie officielle du Japon ?",
+      "choices": ["Won", "Yuan", "Yen", "Dollar"],
+      "answer": 2,
+      "explanation": "Le Yen (JPY) est la monnaie officielle du Japon."
+    },
+    {
+      "question": "Dans quel pays se trouve la Grande Muraille ?",
+      "choices": ["Inde", "Chine", "Égypte", "Pérou"],
+      "answer": 1,
+      "explanation": "La Grande Muraille se trouve en Chine."
+    },
+    {
+      "question": "Qui a écrit 'Roméo et Juliette' ?",
+      "choices": ["Charles Dickens", "Jane Austen", "William Shakespeare", "Léon Tolstoï"],
+      "answer": 2,
+      "explanation": "William Shakespeare est l'auteur de la célèbre tragédie 'Roméo et Juliette'."
+    },
+    {
+      "question": "Quel est le plus haut sommet du monde ?",
+      "choices": ["Mont Blanc", "K2", "Mont Everest", "Kilimandjaro"],
+      "answer": 2,
+      "explanation": "Le Mont Everest, dans l'Himalaya, est le plus haut sommet de la Terre."
+    },
+    {
+      "question": "Quel gaz les plantes absorbent-elles pour la photosynthèse ?",
+      "choices": ["Oxygène", "Dioxyde de carbone", "Azote", "Hydrogène"],
+      "answer": 1,
+      "explanation": "Les plantes absorbent le dioxyde de carbone (CO2) de l'atmosphère pour la photosynthèse."
+    },
+    {
+      "question": "En quelle année la Première Guerre mondiale a-t-elle commencé ?",
+      "choices": ["1914", "1918", "1939", "1945"],
+      "answer": 0,
+      "explanation": "La Première Guerre mondiale a débuté en 1914."
+    },
+    {
+      "question": "Combien de côtés a un hexagone ?",
+      "choices": ["5", "6", "7", "8"],
+      "answer": 1,
+      "explanation": "Un hexagone est un polygone à six côtés."
+    },
+    {
+      "question": "Quel est l'élément chimique avec le symbole 'O' ?",
+      "choices": ["Or", "Osmium", "Oxygène", "Oganesson"],
+      "answer": 2,
+      "explanation": "Le symbole 'O' représente l'élément Oxygène."
+    },
+    {
+      "question": "Qui a inventé l'ampoule électrique ?",
+      "choices": ["Nikola Tesla", "Thomas Edison", "Alexander Graham Bell", "Marie Curie"],
+      "answer": 1,
+      "explanation": "Thomas Edison est largement crédité de l'invention de l'ampoule électrique commerciale."
+    },
+    {
+      "question": "Quelle est la plus grande planète de notre système solaire ?",
+      "choices": ["Terre", "Saturne", "Jupiter", "Neptune"],
+      "answer": 2,
+      "explanation": "Jupiter est la plus grande planète de notre système solaire."
+    }
+  ]
+}

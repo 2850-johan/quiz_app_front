@@ -8,7 +8,7 @@ void main() => runApp(const MyApp());
 
 // ⚠️ Votre constante d'URL de backend doit rester ici
 // Si vous utilisez localtunnel (https://...), elle doit être mise à jour avant chaque session !
-const String BACKEND_BASE_URL = 'http://10.73.186.26:3000'; 
+const String BACKEND_BASE_URL = 'http://192.168.1.29:3000'; 
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

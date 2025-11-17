@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:connectivity_plus/connectivity_plus.dart'; // 1. Import pour la connectivité
 
-// Importe les constantes (BACKEND_BASE_URL) depuis main.dart
+// Importe les pages et services
 import 'main.dart'; 
+import 'auth_page.dart'; 
+import 'database_helper.dart'; // 2. Import de la base de données locale
 
 // --- Définition des couleurs du nouveau Thème Vert (basé sur votre image) ---
 const Color kThemeGreenLight = Color(0xFF1DE9B6); // Vert/Turquoise vif
@@ -34,7 +40,7 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
   List<Map<String, dynamic>> _wrongAnswers = []; 
 
   // --- Variables du Chronomètre ---
-  final int _maxTime = 30; // 30 secondes par question
+  final int _maxTime = 30; 
   late int _currentTime; 
   Timer? _timer;
   late AnimationController _progressController;
@@ -80,6 +86,10 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
     _next(); 
   }
 
+  // ==========================================================
+  // 🎯 LOGIQUE DE FIN DE QUIZ (PHASE 4)
+  // ==========================================================
+
   void _next() {
     _stopTimerAndReset(); 
     
@@ -112,6 +122,7 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
       }
     } 
 
+    // Progression ou fin du quiz
     if (_index < widget.questions.length - 1) {
       setState(() {
         _index++;
@@ -119,8 +130,85 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
         _initTimerAndProgress(); 
       });
     } else {
+      // 1. Marquer le quiz comme terminé
       setState(() => _showResult = true);
+      // 2. Lancer la sauvegarde du score (online ou offline)
+      _submitScore(); 
     }
+  }
+
+  // 🎯 NOUVEAU: Fonction de sauvegarde (Online/Offline)
+  Future<void> _submitScore() async {
+    // 1. Préparer les données du score
+    final scoreData = {
+      'level_label': widget.level,
+      'theme': "culture générale", // ⚠️ TODO: Remplacez par le vrai thème
+      'score': _score,
+      'total_questions': widget.questions.length,
+    };
+
+    // 2. Vérifier la connexion
+    final connectivityResult = await (Connectivity().checkConnectivity());
+    final bool isOnline = connectivityResult.contains(ConnectivityResult.mobile) ||
+                          connectivityResult.contains(ConnectivityResult.wifi);
+    
+    if (isOnline) {
+      // --- MODE EN LIGNE: Envoyer à MySQL ---
+      print("Mode Online: Sauvegarde du score sur le serveur...");
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final token = prefs.getString('token'); 
+        if (token == null) throw Exception("Token non trouvé");
+
+        await http.post(
+          Uri.parse('$BACKEND_BASE_URL/score'),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $token', 
+          },
+          body: jsonEncode(scoreData),
+        );
+        print("Score sauvegardé sur le serveur (MySQL).");
+      } catch (e) {
+        print("Erreur sauvegarde score (online), sauvegarde locale en fallback... $e");
+        // Fallback: Si l'API échoue (ex: 503, timeout), on sauvegarde localement
+        await _saveScoreLocally(scoreData);
+      }
+    } else {
+      // --- MODE HORS LIGNE: Envoyer à SQFlite ---
+      print("Mode Offline: Sauvegarde du score en local (SQFlite)...");
+      await _saveScoreLocally(scoreData);
+    }
+  }
+
+  // 🎯 NOUVEAU: Helper pour la sauvegarde locale
+  Future<void> _saveScoreLocally(Map<String, dynamic> scoreData) async {
+    // Ajoute la date pour la BDD locale
+    scoreData['created_at'] = DateTime.now().toIso8601String();
+    
+    // Appelle le singleton de la base de données
+    final dbHelper = DatabaseHelper.instance; 
+    await dbHelper.insertPendingScore(scoreData);
+    print("Score sauvegardé localement dans pending_scores.");
+  }
+
+
+  // ==========================================================
+  // FONCTION DE DÉCONNEXION (Ajoutée pour le bouton de fin)
+  // ==========================================================
+  Future<void> _logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    await prefs.remove('user');
+    await prefs.remove('userName');
+    
+    if (!mounted) return;
+    
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => const AuthPage()), 
+      (Route<dynamic> route) => false,
+    );
   }
 
   @override
@@ -147,6 +235,17 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
           ],
         ),
       ),
+    );
+  }
+
+  // --- WIDGET HELPER pour les lignes de score ---
+  Widget _buildScoreRow(String label, int value, Color color) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 16)),
+        Text(value.toString(), style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 16)),
+      ],
     );
   }
 
@@ -245,16 +344,39 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
                           }).toList(),
                       ],
                       
-                      // --- 4. Bouton Recommencer ---
+                      // --- 4. Boutons Finaux (Recommencer et Déconnexion) ---
                       const SizedBox(height: 24),
-                      ElevatedButton.icon(
-                          onPressed: () => Navigator.pop(context), // Retourne au QuizSetupScreen
-                          icon: const Icon(Icons.refresh, size: 24, color: kThemeGreenDark),
-                          label: const Text('Recommencer le Quiz', style: TextStyle(fontSize: 18, color: kThemeGreenDark)),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white, 
-                            minimumSize: const Size.fromHeight(56),
+                      Row(
+                        children: [
+                          // Bouton Recommencer
+                          Expanded(
+                            child: ElevatedButton.icon(
+                                onPressed: () => Navigator.pop(context), // Retourne au QuizSetupScreen
+                                icon: const Icon(Icons.refresh, size: 24, color: kThemeGreenDark),
+                                label: const Text('Recommencer', style: TextStyle(fontSize: 16, color: kThemeGreenDark)),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.white, 
+                                  minimumSize: const Size.fromHeight(56),
+                                ),
+                            ),
                           ),
+          
+                          const SizedBox(width: 16), 
+                          
+                          // Bouton Déconnexion
+                          Expanded(
+                            child: ElevatedButton.icon( 
+                                onPressed: _logout, // Appel de la fonction de déconnexion
+                                icon: const Icon(Icons.logout, size: 24, color: Colors.white),
+                                label: const Text('Quitter', style: TextStyle(fontSize: 16, color: Colors.white)),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: kThemeGreenDark.withOpacity(0.8),
+                                  side: const BorderSide(color: Colors.white), // Bordure blanche
+                                  minimumSize: const Size.fromHeight(56),
+                                ),
+                            ),
+                          ),
+                        ],
                       ),
                   ],
               ),
@@ -263,7 +385,7 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
     }
     
     // ==========================================================
-    // ÉCRAN DE QUIZ PENDANT LE JEU (CORRIGÉ AVEC LE THÈME VERT)
+    // ÉCRAN DE QUIZ PENDANT LE JEU
     // ==========================================================
     final q = widget.questions[_index];
     final List choices = q['choices'] as List;
@@ -282,7 +404,6 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
                 animation: _progressController,
                 builder: (context, child) {
                   return LinearProgressIndicator(
-                    // 🎯 CORRIGÉ: Utilise le thème vert
                     valueColor: AlwaysStoppedAnimation<Color>(kThemeGreenLight), 
                     backgroundColor: Colors.grey[300],
                     value: _progressController.value, 
@@ -294,24 +415,20 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
                 padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Text(
                   'Temps restant : $_currentTime s',
-                   // 🎯 CORRIGÉ: Utilise le thème vert (et retire 'const' car kThemeGreenDark n'est pas statique)
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: kThemeGreenDark),
                 ),
               ),
-              // --- Fin du Chronomètre ---
               
               const Divider(height: 20),
               Text(q['question'], style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
               const SizedBox(height: 16),
               ...List.generate(choices.length, (i) {
                 return Card( 
-                  // 🎯 CORRIGÉ: Utilise le thème vert
                   color: _selected == i ? kThemeGreenLight.withOpacity(0.8) : Colors.white,
                   child: ListTile(
                     title: Text(choices[i].toString(), style: TextStyle(color: _selected == i ? Colors.black : Colors.black87)),
                     onTap: () => setState(() => _selected = i),
                     leading: CircleAvatar(
-                      // 🎯 CORRIGÉ: Utilise le thème vert
                       backgroundColor: _selected == i ? kThemeGreenDark : Colors.grey.shade200,
                       child: Text(String.fromCharCode(65 + i), style: TextStyle(color: _selected == i ? Colors.white : Colors.black87, fontWeight: FontWeight.bold)),
                     ),
@@ -325,7 +442,6 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
                   onPressed: _selected == null ? null : _next,
                   child: Text(_index == widget.questions.length - 1 ? 'Terminer' : 'Suivant'),
                   style: ElevatedButton.styleFrom(
-                    // 🎯 CORRIGÉ: Utilise le thème vert
                     backgroundColor: kThemeGreenDark,
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 15),

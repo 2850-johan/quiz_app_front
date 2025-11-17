@@ -17,15 +17,20 @@ dependencies:
   http: ^1.2.2
   shared_preferences: ^2.3.2
   connectivity_plus: ^7.0.0
-  font_awesome_flutter: ^10.7.0 # ⬅️ AJOUTÉ pour les icônes Google/Mail
+  font_awesome_flutter: ^10.7.0
+  
+  # 🎯 AJOUTS POUR LE MODE HORS LIGNE
+  sqflite: ^2.3.3
+  path_provider: ^2.1.3
   
 dev_dependencies:
   flutter_test:
     sdk: flutter
   
-  flutter_lints: ^3.0.0
+  flutter_lints: ^3.0.0 
   flutter_launcher_icons: ^0.13.1
 
+# Configuration de l'icône de lancement
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
@@ -34,5 +39,7 @@ flutter_launcher_icons:
 flutter:
   uses-material-design: true
 
+  # Déclarez votre dossier d'assets (requis pour la Phase 2)
   assets:
     - assets/images/
+    - assets/quiz/ 

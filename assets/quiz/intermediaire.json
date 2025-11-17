@@ -1,0 +1,94 @@
+{
+  "questions": [
+    {
+      "question": "Quelle est la capitale politique du Cameroun ?",
+      "choices": ["Douala", "Yaoundé", "Garoua", "Bafoussam"],
+      "answer": 1,
+      "explanation": "Yaoundé est la capitale politique du Cameroun depuis l'indépendance en 1960."
+    },
+    {
+      "question": "Quel est le surnom donné au Cameroun en raison de sa diversité ?",
+      "choices": ["Le cœur de l'Afrique", "L'Afrique en miniature", "La perle de l'Afrique", "Le géant d'Afrique"],
+      "answer": 1,
+      "explanation": "Le Cameroun est surnommé 'l'Afrique en miniature' en raison de sa grande diversité géographique, climatique et culturelle."
+    },
+    {
+      "question": "En quelle année le Cameroun a-t-il obtenu son indépendance de la France ?",
+      "choices": ["1958", "1960", "1961", "1963"],
+      "answer": 1,
+      "explanation": "Le Cameroun français a obtenu son indépendance le 1er janvier 1960."
+    },
+    {
+      "question": "Quel est le point culminant du Cameroun ?",
+      "choices": ["Mont Cameroun", "Mont Oku", "Mont Manengouba", "Mont Bamboutos"],
+      "answer": 0,
+      "explanation": "Le Mont Cameroun, avec ses 4 095 mètres d'altitude, est le point culminant du Cameroun et un volcan actif."
+    },
+    {
+      "question": "Quelle est la monnaie officielle du Cameroun ?",
+      "choices": ["Franc CFA", "Euro", "Dollar", "Naira"],
+      "answer": 0,
+      "explanation": "Le Franc CFA (Franc de la Coopération Financière en Afrique centrale) est la monnaie officielle du Cameroun."
+    },
+    {
+      "question": "Combien de langues officielles le Cameroun possède-t-il ?",
+      "choices": ["1", "2", "3", "4"],
+      "answer": 1,
+      "explanation": "Le Cameroun a deux langues officielles : le français et l'anglais, héritage de la colonisation."
+    },
+    {
+      "question": "Quel joueur camerounais est considéré comme l'un des plus grands footballeurs africains ?",
+      "choices": ["Samuel Eto'o", "Roger Milla", "Rigobert Song", "Patrick Mboma"],
+      "answer": 0,
+      "explanation": "Samuel Eto'o est considéré comme l'un des plus grands footballeurs africains de tous les temps, avec de nombreux titres et records."
+    },
+    {
+      "question": "Quelle ville est le principal port et centre économique du Cameroun ?",
+      "choices": ["Kribi", "Limbe", "Douala", "Edéa"],
+      "answer": 2,
+      "explanation": "Douala est la plus grande ville et le principal centre économique et portuaire du Cameroun."
+    },
+    {
+      "question": "Quel océan borde le Cameroun ?",
+      "choices": ["Océan Indien", "Océan Atlantique", "Mer Méditerranée", "Mer Rouge"],
+      "answer": 1,
+      "explanation": "Le Cameroun est bordé par l'Océan Atlantique au sud-ouest, avec environ 400 km de côtes."
+    },
+    {
+      "question": "Combien de régions administratives compte le Cameroun ?",
+      "choices": ["8", "10", "12", "15"],
+      "answer": 1,
+      "explanation": "Le Cameroun est divisé en 10 régions administratives depuis 2008."
+    },
+    {
+      "question": "Quel parc national camerounais est célèbre pour ses gorilles ?",
+      "choices": ["Parc de la Bénoué", "Parc de Waza", "Parc de Korup", "Parc de Campo Ma'an"],
+      "answer": 2,
+      "explanation": "Le Parc National de Korup est une forêt tropicale ancienne abritant des gorilles et une biodiversité exceptionnelle."
+    },
+    {
+      "question": "Quel est le plat national camerounais à base de légumes et d'épices ?",
+      "choices": ["Jollof rice", "Ndolé", "Fufu", "Poulet DG"],
+      "answer": 1,
+      "explanation": "Le Ndolé est considéré comme le plat national du Cameroun, préparé avec des feuilles de ndolé, des arachides et de la viande ou du poisson."
+    },
+    {
+      "question": "Quel président camerounais est au pouvoir depuis 1982 ?",
+      "choices": ["Ahmadou Ahidjo", "Paul Biya", "John Fru Ndi", "Ni John Fru Ndi"],
+      "answer": 1,
+      "explanation": "Paul Biya est président du Cameroun depuis le 6 novembre 1982, ce qui fait de lui l'un des dirigeants les plus anciens d'Afrique."
+    },
+    {
+      "question": "Quelle est la population approximative du Cameroun ?",
+      "choices": ["15 millions", "20 millions", "28 millions", "35 millions"],
+      "answer": 2,
+      "explanation": "Le Cameroun compte environ 28 millions d'habitants, ce qui en fait l'un des pays les plus peuplés d'Afrique centrale."
+    },
+    {
+      "question": "Quel surnom porte l'équipe nationale de football du Cameroun ?",
+      "choices": ["Les Éléphants", "Les Lions Indomptables", "Les Aigles", "Les Panthères"],
+      "answer": 1,
+      "explanation": "L'équipe nationale de football du Cameroun est surnommée 'Les Lions Indomptables' et a remporté 5 fois la Coupe d'Afrique des Nations."
+    }
+  ]
+}

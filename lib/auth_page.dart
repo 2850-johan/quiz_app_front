@@ -24,7 +24,7 @@ class AuthPage extends StatefulWidget {
 class _AuthPageState extends State<AuthPage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  String _status = 'Prêt';
+  String _status = '';
 
   final _gsi = GoogleSignIn(
     scopes: ['email', 'profile'],
@@ -169,7 +169,7 @@ class _AuthPageState extends State<AuthPage> {
                         ),
                         const SizedBox(height: 12),
                         const Text(
-                          'QuizMaster',
+                          'Quiz App',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 40,
