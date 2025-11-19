@@ -8,7 +8,7 @@ class DatabaseHelper {
   static const _databaseName = "QuizAppOffline.db";
   static const _databaseVersion = 1;
 
-  // Noms des tables
+  // Noms des tables pour les scores en attente et le classement en cache
   static const tablePendingScores = 'pending_scores';
   static const tableCachedLeaderboard = 'cached_leaderboard';
 
@@ -26,7 +26,7 @@ class DatabaseHelper {
   // Initialisation de la base de données
   _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, _databaseName);
+    String path = join(documentsDirectory.path, _databaseName);// chemin complet de la base de donnees localement
     return await openDatabase(path,
         version: _databaseVersion,
         onCreate: _onCreate);

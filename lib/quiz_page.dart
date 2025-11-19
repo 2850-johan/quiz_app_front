@@ -142,7 +142,7 @@ class _QuizPageState extends State<QuizPage> with TickerProviderStateMixin {
     // 1. Préparer les données du score
     final scoreData = {
       'level_label': widget.level,
-      'theme': "culture générale", // ⚠️ TODO: Remplacez par le vrai thème
+      'theme': "culture générale", //
       'score': _score,
       'total_questions': widget.questions.length,
     };

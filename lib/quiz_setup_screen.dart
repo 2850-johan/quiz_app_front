@@ -22,7 +22,7 @@ class QuizSetupScreen extends StatefulWidget {
 class _QuizSetupScreenState extends State<QuizSetupScreen> {
   final GlobalKey<LeaderboardTabState> _leaderboardKey = GlobalKey<LeaderboardTabState>();
 
-  final _themeCtrl = TextEditingController(text: 'culture générale');
+  final _themeCtrl = TextEditingController(text: 'culture générale');// permet d'avoi r un theme par defaut
   final _levels = const ['facile', 'normal', 'intermediaire', 'difficile'];
   String _level = 'facile';
   bool _loading = false;
@@ -30,7 +30,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
 
   @override
   void dispose() {
-    _themeCtrl.dispose();
+    _themeCtrl.dispose();// libère les ressources du controller
     super.dispose();
   }
 
@@ -53,7 +53,7 @@ class _QuizSetupScreenState extends State<QuizSetupScreen> {
   // FONCTION DE DÉCONNEXION
   // ==========================================================
   Future<void> _logout() async {
-    final prefs = await SharedPreferences.getInstance();
+    final prefs = await SharedPreferences.getInstance(); // ici on recupere les tokens et infos utilisateur stockés dans les preferences partagées
     await prefs.remove('token');
     await prefs.remove('user');
     await prefs.remove('userName');

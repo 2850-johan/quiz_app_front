@@ -36,17 +36,17 @@ class _SplashScreenState extends State<SplashScreen> {
     final bool isOnline = connectivityResult.contains(ConnectivityResult.mobile) ||
                           connectivityResult.contains(ConnectivityResult.wifi);
     
-    final dbHelper = DatabaseHelper.instance;
-    final prefs = await SharedPreferences.getInstance();
+    final dbHelper = DatabaseHelper.instance; // Instance de la base de données locale
+    final prefs = await SharedPreferences.getInstance(); // Instance de SharedPreferences
 
     // 3. Exécution de la synchronisation (SI EN LIGNE)
     if (isOnline) {
       print("Mode Online: Démarrage de la synchronisation...");
       try {
-        // Tâche A: Envoyer les scores en attente (Upload)
+        // Tâche A: Envoyer les scores en attente au serveur  (Upload)
         await _syncPendingScores(dbHelper, prefs);
         
-        // Tâche B: Mettre en cache le classement (Download)
+        // Tâche B: le telecharge pour le mettre en cache le classement (Download)
         await _cacheLeaderboard(dbHelper);
 
       } catch (e) {
@@ -67,13 +67,13 @@ class _SplashScreenState extends State<SplashScreen> {
       // Utilisateur connecté
       final userData = jsonDecode(userJson);
       final userName = userData['nom'] ?? userData['email'] ?? 'Utilisateur';
-
+      // Navigue vers l'écran de configuration du quiz si connecté
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => QuizSetupScreen(userName: userName)),
       );
     } else {
-      // Utilisateur déconnecté
+      // Navigue vers le local 
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const AuthPage()),
@@ -81,12 +81,12 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-  // --- Tâche A: UPLOAD (Synchronisation des scores locaux vers MySQL) ---
+  // --- Tâche A: Envoyer tout ce qui est  score au server  locaux vers MySQL ---
   Future<void> _syncPendingScores(DatabaseHelper dbHelper, SharedPreferences prefs) async {
     final token = prefs.getString('token');
     if (token == null) return; // Ne peut pas synchroniser sans token
 
-    final pendingScores = await dbHelper.getPendingScores();
+    final pendingScores = await dbHelper.getPendingScores(); // Récupère les scores en attente en local
     if (pendingScores.isEmpty) {
       print("Synchro Upload: Aucun score en attente.");
       return;
@@ -128,10 +128,11 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   // --- Tâche B: DOWNLOAD (Mise en cache du classement MySQL vers SQFlite) ---
-  Future<void> _cacheLeaderboard(DatabaseHelper dbHelper) async {
+  Future<void> _cacheLeaderboard(DatabaseHelper dbHelper) async //Permet d'avoir le classement meme en local 
+  {
     print("Synchro Download: Mise en cache du classement...");
     try {
-      final resp = await http.get(Uri.parse('$BACKEND_BASE_URL/leaderboard'));
+      final resp = await http.get(Uri.parse('$BACKEND_BASE_URL/leaderboard')); // demande le classement au backend
       
       if (resp.statusCode == 200) {
         final leaderboardData = jsonDecode(resp.body) as List;
@@ -139,7 +140,7 @@ class _SplashScreenState extends State<SplashScreen> {
         // 1. Vider l'ancien cache
         await dbHelper.clearCachedLeaderboard();
 
-        // 2. Remplir avec les nouvelles données
+        // 2. Remplir avec les nouvelles données + sauvegarde les entrées
         for (var entry in leaderboardData) {
           await dbHelper.insertCachedLeaderboardEntry(entry as Map<String, dynamic>);
         }
@@ -173,7 +174,7 @@ class _SplashScreenState extends State<SplashScreen> {
             ),
             const SizedBox(height: 20),
             const Text(
-              'QuizMaster', 
+              'Quiz App', 
               style: TextStyle(
                 fontSize: 32, 
                 fontWeight: FontWeight.bold,

@@ -38,11 +38,11 @@ class _AuthPageState extends State<AuthPage> {
     super.dispose();
   }
 
-  // Fonction de navigation commune après succès
+  // Fonction de navigation commune aux deux méthodes après succès
   void _onLoginSuccess(Map<String, dynamic> user, BuildContext context) {
     final userName = user['nom'] ?? user['email'] ?? 'Utilisateur';
     
-    if (!mounted) return;
+    if (!mounted) return; // verifie que le widget est toujours monté avant de naviguer
     
     Navigator.pushReplacement(
       context,
@@ -75,13 +75,14 @@ class _AuthPageState extends State<AuthPage> {
         body: jsonEncode({'nom': nom, 'email': email}),
       );
 
-      if (res.statusCode == 200) {
+      if (res.statusCode == 200) // permet d'éviter un crash si le widget a été touché après l'appel asynchrone.
+      {
         final data = jsonDecode(res.body);
         final user = data['user'];
-        // Sauvegarde de la session
+        // Sauvegarde de la session avec SharedPreferences
         await SharedPreferences.getInstance().then((prefs) {
-          prefs.setString('token', data['accessToken']);
-          prefs.setString('user', jsonEncode(user));
+          prefs.setString('token', data['accessToken']); // Sauvegarde du token
+          prefs.setString('user', jsonEncode(user));// Sauvegarde des infos utilisateur
         });
         _onLoginSuccess(user, context);
       } else {
@@ -101,7 +102,7 @@ class _AuthPageState extends State<AuthPage> {
         setState(() => _status = 'Connexion annulée');
         return;
       }
-      final auth = await account.authentication;
+      final auth = await account.authentication; // Récupère les tokens d'authentification de Google
       final res = await http.post(
         Uri.parse('$BACKEND_BASE_URL/auth/google'),
         headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
